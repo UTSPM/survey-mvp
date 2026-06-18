@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASNB Survey</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h2>Customer Feedback Survey</h2>
+
+    <p id="loading">Loading survey...</p>
+
+    <div id="survey" style="display:none;">
+        <p>How was your meeting today?</p>
+
+        <select id="score">
+            <option value="5">Excellent</option>
+            <option value="4">Good</option>
+            <option value="3">Average</option>
+            <option value="2">Poor</option>
+            <option value="1">Very Poor</option>
+        </select>
+
+        <p>Additional feedback:</p>
+        <textarea id="feedback"></textarea>
+
+        <br><br>
+        <button onclick="submitSurvey()">Submit</button>
+    </div>
+
+    <p id="success" style="display:none;">✅ Thank you for your feedback!</p>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (token === null) {
+            document.getElementById("loading").innerText = "Invalid survey link.";
+        } else {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("survey").style.display = "block";
+        }
+
+        function submitSurvey() {
+
+            const score = document.getElementById("score").value;
+            const feedback = document.getElementById("feedback").value;
+
+            fetch("PASTE_YOUR_POWER_AUTOMATE_URL_HERE", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    token: token,
+                    score: score,
+                    feedback: feedback
+                })
+            })
+            .then(response => {
+                document.getElementById("survey").style.display = "none";
+                document.getElementById("success").style.display = "block";
+            })
+            .catch(error => {
+                alert("Error submitting survey");
+            });
+        }
+    </script>
+
+</body>
+</html>
