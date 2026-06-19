@@ -1,18 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ASNB Survey</title>
+    <title>Customer Feedback</title>
     <meta charset="utf-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background-color: #0057b8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004099;
+        }
+
+        .success {
+            text-align: center;
+            font-size: 18px;
+            color: green;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
 </head>
 
 <body>
+
+<div class="container">
+
     <h2>Customer Feedback Survey</h2>
+    <p>Your feedback helps us improve our service.</p>
 
-    <p id="loading">Loading survey...</p>
+    <div id="error" class="hidden">Invalid survey link.</div>
 
-    <div id="survey" style="display:none;">
-        <p>How was your meeting today?</p>
+    <div id="survey">
 
+        <label>How was your meeting today?</label>
         <select id="score">
             <option value="5">Excellent</option>
             <option value="4">Good</option>
@@ -21,51 +99,32 @@
             <option value="1">Very Poor</option>
         </select>
 
-        <p>Additional feedback:</p>
-        <textarea id="feedback"></textarea>
+        <label>Additional feedback</label>
+        <textarea id="feedback" placeholder="Optional..."></textarea>
 
-        <br><br>
         <button onclick="submitSurvey()">Submit</button>
+
     </div>
 
-    <p id="success" style="display:none;">✅ Thank you for your feedback!</p>
+    <div id="success" class="success hidden">
+        ✅ Thank you for your feedback!
+    </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
+    <div class="footer">
+        © ASNB Customer Experience
+    </div>
 
-        if (token === null) {
-            document.getElementById("loading").innerText = "Invalid survey link.";
-        } else {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("survey").style.display = "block";
-        }
+</div>
 
-        function submitSurvey() {
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
 
-            const score = document.getElementById("score").value;
-            const feedback = document.getElementById("feedback").value;
+    if (!token) {
+        document.getElementById("survey").style.display = "none";
+        document.getElementById("error").classList.remove("hidden");
+    }
 
-            fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    token: token,
-                    score: score,
-                    feedback: feedback
-                })
-            })
-            .then(response => {
-                document.getElementById("survey").style.display = "none";
-                document.getElementById("success").style.display = "block";
-            })
-            .catch(error => {
-                alert("Error submitting survey");
-            });
-        }
-    </script>
+    function submitSurvey() {
 
-</body>
-</html>
+        const score = document.getElementById("score").value;
