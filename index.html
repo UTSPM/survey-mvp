@@ -197,39 +197,42 @@
         });
     }
 
-    function submitSurvey() {
+function submitSurvey() {
 
-        if (rating === 0) {
-            alert("Please select a rating before submitting.");
-            return;
-        }
-
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerText = "Submitting...";
-
-        const feedback = document.getElementById("feedback").value;
-
-        fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                token: String(token),
-                score: Number(rating),
-                feedback: feedback || ""
-            })
-        })
-        .then(() => {
-            document.getElementById("survey").style.display = "none";
-            document.getElementById("success").classList.remove("hidden");
-        })
-        .catch(() => {
-            alert("Submission failed. Please try again.");
-        });
-
+    if (rating === 0) {
+        alert("Please select a rating before submitting.");
+        return;
     }
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+
+    const feedback = document.getElementById("feedback").value;
+
+    fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
+        method: "POST",
+        mode: "no-cors",  // ✅ IMPORTANT FIX
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            token: String(token || ""),
+            score: Number(rating),
+            feedback: String(feedback || ""),
+            rmName: String(rmName || "")
+        })
+    })
+    .then(() => {
+        // ✅ Always assume success (no-cors doesn’t return body)
+        document.getElementById("survey").style.display = "none";
+        document.getElementById("success").classList.remove("hidden");
+    })
+    .catch(() => {
+        alert("Submission failed. Please try again.");
+    });
+
+}
 
 </script>
 
