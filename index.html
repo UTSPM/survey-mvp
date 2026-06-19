@@ -105,3 +105,119 @@
             display: none;
         }
 
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg">
+    </div>
+
+    <h2>Share your experience</h2>
+    <p class="subtitle">Your feedback helps us improve our service to you</p>
+
+    <!-- Personalisation placeholder -->
+    <p class="subtitle" id="rmText"></p>
+
+    <div id="survey">
+
+        <div class="stars">
+            <span class="star" onclick="setRating(1)">★</span>
+            <span class="star" onclick="setRating(2)">★</span>
+            <span class="star" onclick="setRating(3)">★</span>
+            <span class="star" onclick="setRating(4)">★</span>
+            <span class="star" onclick="setRating(5)">★</span>
+        </div>
+
+        <div class="rating-label" id="ratingLabel">
+            Select a rating
+        </div>
+
+        <textarea id="feedback" placeholder="Additional feedback (optional)"></textarea>
+
+        <button id="submitBtn" onclick="submitSurvey()">Submit</button>
+
+    </div>
+
+    <div id="success" class="success hidden">
+        ✅ Thank you! Your feedback has been submitted successfully.
+        <div class="small">We appreciate your time and input.</div>
+    </div>
+
+    <div class="small">
+        © ASNB Customer Experience
+    </div>
+
+</div>
+
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    let rating = 0;
+
+    // OPTIONAL: RM dynamic hook (future use)
+    document.getElementById("rmText").innerText = "";
+
+    const labels = {
+        1: "Very Poor",
+        2: "Poor",
+        3: "Average",
+        4: "Good",
+        5: "Excellent"
+    };
+
+    function setRating(value) {
+        rating = value;
+
+        document.getElementById("ratingLabel").innerText = labels[value];
+
+        const stars = document.querySelectorAll(".star");
+
+        stars.forEach((star, index) => {
+            star.classList.toggle("selected", index < value);
+        });
+    }
+
+    function submitSurvey() {
+
+        if (rating === 0) {
+            alert("Please select a rating before submitting.");
+            return;
+        }
+
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.innerText = "Submitting...";
+
+        const feedback = document.getElementById("feedback").value;
+
+        fetch("PASTE_YOUR_POWER_AUTOMATE_URL_HERE", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+                score: rating,
+                feedback: feedback
+            })
+        })
+        .then(() => {
+            document.getElementById("survey").style.display = "none";
+            document.getElementById("success").classList.remove("hidden");
+        })
+        .catch(() => {
+            alert("Submission failed. Please try again.");
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
