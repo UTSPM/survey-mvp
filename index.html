@@ -1,63 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Feedback</title>
+    <title>ASNB Customer Feedback</title>
     <meta charset="utf-8">
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
             background-color: #f5f6fa;
             margin: 0;
-            padding: 0;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 480px;
             margin: 80px auto;
-            background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
-        h2 {
+        .logo {
+            text-align: center;
             margin-bottom: 10px;
         }
 
+        .logo img {
+            height: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-top: 0;
+        }
+
         label {
+            margin-top: 25px;
             display: block;
-            margin-top: 20px;
             font-weight: 600;
         }
 
-        select, textarea {
+        textarea {
             width: 100%;
             padding: 10px;
             margin-top: 8px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #ccc;
-        }
-
-        textarea {
             resize: vertical;
             height: 100px;
         }
 
+        .stars {
+            margin-top: 10px;
+        }
+
+        .star {
+            font-size: 30px;
+            cursor: pointer;
+            color: #ccc;
+        }
+
+        .star.selected {
+            color: #ffb400;
+        }
+
         button {
-            margin-top: 25px;
             width: 100%;
+            margin-top: 30px;
             padding: 12px;
             background-color: #0057b8;
             color: white;
-            border: none;
-            border-radius: 6px;
             font-size: 16px;
-            cursor: pointer;
+            border: none;
+            border-radius: 8px;
         }
 
-        button:hover {
-            background-color: #004099;
+        button:disabled {
+            background-color: #999;
         }
 
         .success {
@@ -66,16 +91,22 @@
             color: green;
         }
 
+        .loader {
+            text-align: center;
+            margin-top: 20px;
+        }
+
         .hidden {
             display: none;
         }
 
         .footer {
-            margin-top: 20px;
-            font-size: 12px;
             text-align: center;
-            color: #777;
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
         }
+
     </style>
 </head>
 
@@ -83,26 +114,38 @@
 
 <div class="container">
 
-    <h2>Customer Feedback Survey</h2>
-    <p>Your feedback helps us improve our service.</p>
+    <div class="logo">
+        <!-- Replace with your logo -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg">
+    </div>
 
-    <div id="error" class="hidden">Invalid survey link.</div>
+    <h2>Customer Feedback</h2>
+    <p class="subtitle">Your feedback helps us improve our service experience</p>
+
+    <div id="error" class="hidden">
+        Invalid survey link.
+    </div>
 
     <div id="survey">
 
-        <label>How was your meeting today?</label>
-        <select id="score">
-            <option value="5">Excellent</option>
-            <option value="4">Good</option>
-            <option value="3">Average</option>
-            <option value="2">Poor</option>
-            <option value="1">Very Poor</option>
-        </select>
+        <label>How would you rate your recent engagement?</label>
 
-        <label>Additional feedback</label>
-        <textarea id="feedback" placeholder="Optional..."></textarea>
+        <div class="stars">
+            <span class="star" onclick="setRating(1)">★</span>
+            <span class="star" onclick="setRating(2)">★</span>
+            <span class="star" onclick="setRating(3)">★</span>
+            <span class="star" onclick="setRating(4)">★</span>
+            <span class="star" onclick="setRating(5)">★</span>
+        </div>
 
-        <button onclick="submitSurvey()">Submit</button>
+        <label>Additional feedback (optional)</label>
+        <textarea id="feedback" placeholder="Tell us how we can improve..."></textarea>
+
+        <button id="submitBtn" onclick="submitSurvey()">Submit</button>
+
+        <div id="loading" class="loader hidden">
+            Submitting...
+        </div>
 
     </div>
 
@@ -117,14 +160,43 @@
 </div>
 
 <script>
+
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+
+    let rating = 0;
 
     if (!token) {
         document.getElementById("survey").style.display = "none";
         document.getElementById("error").classList.remove("hidden");
     }
 
+    function setRating(value) {
+        rating = value;
+        const stars = document.querySelectorAll(".star");
+
+        stars.forEach((star, index) => {
+            star.classList.toggle("selected", index < value);
+        });
+    }
+
     function submitSurvey() {
 
-        const score = document.getElementById("score").value;
+        if (rating === 0) {
+            alert("Please select a rating.");
+            return;
+        }
+
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("loading").classList.remove("hidden");
+
+        const feedback = document.getElementById("feedback").value;
+
+        fetch("PASTE_YOUR_POWER_AUTOMATE_URL_HERE", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+                score: rating,
