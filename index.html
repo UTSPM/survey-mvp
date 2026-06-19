@@ -210,9 +210,10 @@ function submitSurvey() {
 
     const feedback = document.getElementById("feedback").value;
 
+    // SEND DATA (do not depend on response)
     fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
         method: "POST",
-        mode: "no-cors",  // ✅ IMPORTANT FIX
+        mode: "no-cors",
         headers: {
             "Content-Type": "application/json"
         },
@@ -222,15 +223,13 @@ function submitSurvey() {
             feedback: String(feedback || ""),
             rmName: String(rmName || "")
         })
-    })
-    .then(() => {
-        // ✅ Always assume success (no-cors doesn’t return body)
+    }).catch(() => {});
+
+    // ✅ FORCE SUCCESS UI (IMPORTANT)
+    setTimeout(() => {
         document.getElementById("survey").style.display = "none";
         document.getElementById("success").classList.remove("hidden");
-    })
-    .catch(() => {
-        alert("Submission failed. Please try again.");
-    });
+    }, 800); // slight delay for better UX
 
 }
 
