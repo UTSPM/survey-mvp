@@ -7,48 +7,61 @@
     <style>
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background-color: #f4f6f9;
+            background-color: #f5f6fa;
             margin: 0;
         }
 
         .container {
             max-width: 480px;
-            margin: 60px auto;
+            margin: 80px auto;
             padding: 30px;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .logo img {
-            height: 42px;
+            height: 40px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
-        .subtitle {
+        p.subtitle {
             text-align: center;
-            color: #555;
-            font-size: 14px;
+            color: #666;
+            margin-top: 0;
+        }
+
+        label {
+            margin-top: 25px;
+            display: block;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            height: 100px;
         }
 
         .stars {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .star {
-            font-size: 34px;
-            margin: 0 5px;
+            font-size: 30px;
             cursor: pointer;
             color: #ccc;
         }
@@ -57,25 +70,9 @@
             color: #ffb400;
         }
 
-        .rating-label {
-            text-align: center;
-            margin-top: 8px;
-            font-weight: bold;
-            color: #444;
-        }
-
-        textarea {
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            height: 100px;
-        }
-
         button {
-            margin-top: 25px;
             width: 100%;
+            margin-top: 30px;
             padding: 12px;
             background-color: #0057b8;
             color: white;
@@ -94,15 +91,20 @@
             color: green;
         }
 
-        .small {
-            font-size: 12px;
-            color: #777;
+        .loader {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .hidden {
             display: none;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
         }
 
     </style>
@@ -113,16 +115,20 @@
 <div class="container">
 
     <div class="logo">
+        <!-- Replace with your logo -->
         <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg">
     </div>
 
-    <h2>Share your experience</h2>
-    <p class="subtitle">Your feedback helps us improve our service to you</p>
+    <h2>Customer Feedback</h2>
+    <p class="subtitle">Your feedback helps us improve our service experience</p>
 
-    <!-- Personalisation placeholder -->
-    <p class="subtitle" id="rmText"></p>
+    <div id="error" class="hidden">
+        Invalid survey link.
+    </div>
 
     <div id="survey">
+
+        <label>How would you rate your recent engagement?</label>
 
         <div class="stars">
             <span class="star" onclick="setRating(1)">★</span>
@@ -132,22 +138,22 @@
             <span class="star" onclick="setRating(5)">★</span>
         </div>
 
-        <div class="rating-label" id="ratingLabel">
-            Select a rating
-        </div>
-
-        <textarea id="feedback" placeholder="Additional feedback (optional)"></textarea>
+        <label>Additional feedback (optional)</label>
+        <textarea id="feedback" placeholder="Tell us how we can improve..."></textarea>
 
         <button id="submitBtn" onclick="submitSurvey()">Submit</button>
+
+        <div id="loading" class="loader hidden">
+            Submitting...
+        </div>
 
     </div>
 
     <div id="success" class="success hidden">
-        ✅ Thank you! Your feedback has been submitted successfully.
-        <div class="small">We appreciate your time and input.</div>
+        ✅ Thank you for your feedback!
     </div>
 
-    <div class="small">
+    <div class="footer">
         © ASNB Customer Experience
     </div>
 
@@ -160,22 +166,13 @@
 
     let rating = 0;
 
-    // OPTIONAL: RM dynamic hook (future use)
-    document.getElementById("rmText").innerText = "";
-
-    const labels = {
-        1: "Very Poor",
-        2: "Poor",
-        3: "Average",
-        4: "Good",
-        5: "Excellent"
-    };
+    if (!token) {
+        document.getElementById("survey").style.display = "none";
+        document.getElementById("error").classList.remove("hidden");
+    }
 
     function setRating(value) {
         rating = value;
-
-        document.getElementById("ratingLabel").innerText = labels[value];
-
         const stars = document.querySelectorAll(".star");
 
         stars.forEach((star, index) => {
@@ -186,13 +183,12 @@
     function submitSurvey() {
 
         if (rating === 0) {
-            alert("Please select a rating before submitting.");
+            alert("Please select a rating.");
             return;
         }
 
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerText = "Submitting...";
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("loading").classList.remove("hidden");
 
         const feedback = document.getElementById("feedback").value;
 
@@ -221,3 +217,4 @@
 
 </body>
 </html>
+``
