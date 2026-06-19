@@ -7,61 +7,48 @@
     <style>
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background-color: #f5f6fa;
+            background-color: #f4f6f9;
             margin: 0;
         }
 
         .container {
             max-width: 480px;
-            margin: 80px auto;
+            margin: 60px auto;
             padding: 30px;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .logo img {
-            height: 40px;
+            height: 42px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
-        p.subtitle {
+        .subtitle {
             text-align: center;
-            color: #666;
-            margin-top: 0;
-        }
-
-        label {
-            margin-top: 25px;
-            display: block;
-            font-weight: 600;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            resize: vertical;
-            height: 100px;
+            color: #555;
+            font-size: 14px;
         }
 
         .stars {
-            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
         }
 
         .star {
-            font-size: 30px;
+            font-size: 34px;
+            margin: 0 5px;
             cursor: pointer;
             color: #ccc;
         }
@@ -70,9 +57,25 @@
             color: #ffb400;
         }
 
-        button {
+        .rating-label {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        textarea {
+            margin-top: 20px;
             width: 100%;
-            margin-top: 30px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            height: 100px;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
             padding: 12px;
             background-color: #0057b8;
             color: white;
@@ -91,112 +94,14 @@
             color: green;
         }
 
-        .loader {
+        .small {
+            font-size: 12px;
+            color: #777;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .hidden {
             display: none;
         }
 
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            margin-top: 20px;
-        }
-
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="logo">
-        <!-- Replace with your logo -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg">
-    </div>
-
-    <h2>Customer Feedback</h2>
-    <p class="subtitle">Your feedback helps us improve our service experience</p>
-
-    <div id="error" class="hidden">
-        Invalid survey link.
-    </div>
-
-    <div id="survey">
-
-        <label>How would you rate your recent engagement?</label>
-
-        <div class="stars">
-            <span class="star" onclick="setRating(1)">★</span>
-            <span class="star" onclick="setRating(2)">★</span>
-            <span class="star" onclick="setRating(3)">★</span>
-            <span class="star" onclick="setRating(4)">★</span>
-            <span class="star" onclick="setRating(5)">★</span>
-        </div>
-
-        <label>Additional feedback (optional)</label>
-        <textarea id="feedback" placeholder="Tell us how we can improve..."></textarea>
-
-        <button id="submitBtn" onclick="submitSurvey()">Submit</button>
-
-        <div id="loading" class="loader hidden">
-            Submitting...
-        </div>
-
-    </div>
-
-    <div id="success" class="success hidden">
-        ✅ Thank you for your feedback!
-    </div>
-
-    <div class="footer">
-        © ASNB Customer Experience
-    </div>
-
-</div>
-
-<script>
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    let rating = 0;
-
-    if (!token) {
-        document.getElementById("survey").style.display = "none";
-        document.getElementById("error").classList.remove("hidden");
-    }
-
-    function setRating(value) {
-        rating = value;
-        const stars = document.querySelectorAll(".star");
-
-        stars.forEach((star, index) => {
-            star.classList.toggle("selected", index < value);
-        });
-    }
-
-    function submitSurvey() {
-
-        if (rating === 0) {
-            alert("Please select a rating.");
-            return;
-        }
-
-        document.getElementById("submitBtn").disabled = true;
-        document.getElementById("loading").classList.remove("hidden");
-
-        const feedback = document.getElementById("feedback").value;
-
-        fetch("PASTE_YOUR_POWER_AUTOMATE_URL_HERE", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                token: token,
-                score: rating,
