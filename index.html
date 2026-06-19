@@ -155,11 +155,11 @@
 
 <script>
 
-    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const rmName = urlParams.get('rmName');
     
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const rmName = urlParams.get('rmName');
+    window.onload = function () {
     
         console.log("TOKEN:", token);
         console.log("RM NAME:", rmName);
