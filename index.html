@@ -155,18 +155,22 @@
 
 <script>
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const rmName = urlParams.get('rmName');
+    window.onload = function () {
     
-    console.log("TOKEN VALUE:", token);
-    console.log("RM NAME:", rmName);
-
-    const rmTextElement = document.getElementById("rmText");
-
-    if (rmTextElement && rmName) {
-        rmTextElement.innerText = "How was your engagement with " + rmName + "?";
-    }
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const rmName = urlParams.get('rmName');
+    
+        console.log("TOKEN:", token);
+        console.log("RM NAME:", rmName);
+    
+        const rmTextElement = document.getElementById("rmText");
+    
+        if (rmTextElement && rmName) {
+            rmTextElement.innerText = "How was your engagement with " + rmName + "?";
+        }
+    
+    };
     
     let rating = 0;
 
