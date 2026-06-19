@@ -204,9 +204,9 @@
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                token: token,
-                score: rating,
-                feedback: feedback
+                token: String(token),
+                score: Number(rating),
+                feedback: feedback || ""
             })
         })
         .then(() => {
