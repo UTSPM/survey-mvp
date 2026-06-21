@@ -225,6 +225,8 @@ function submitSurvey() {
         "&score=" + encodeURIComponent(String(rating)) +
         "&feedback=" + encodeURIComponent(String(feedback || ""));
 
+    console.log("FINAL SUBMIT URL:", submitUrl);
+    
     fetch(submitUrl, {
         method: "POST",
         mode: "no-cors"
