@@ -210,27 +210,30 @@ function submitSurvey() {
     btn.innerText = "Submitting...";
 
     const feedback = document.getElementById("feedback").value;
+
+    console.log("Submit button clicked");
+    console.log("TOKEN:", token);
+    console.log("RM NAME:", rmName);
     console.log("Sending request now...");
 
-    // SEND DATA (do not depend on response)
-    const formData = new URLSearchParams();
-    formData.append("token", String(token || ""));
-    formData.append("score", String(rating));
-    formData.append("feedback", String(feedback || ""));
-    formData.append("rmName", String(rmName || ""));
-    
-    fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
+    const baseUrl = "https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8";
+
+    const submitUrl =
+        baseUrl +
+        "&token=" + encodeURIComponent(String(token || "")) +
+        "&rmName=" + encodeURIComponent(String(rmName || "")) +
+        "&score=" + encodeURIComponent(String(rating)) +
+        "&feedback=" + encodeURIComponent(String(feedback || ""));
+
+    fetch(submitUrl, {
         method: "POST",
-        mode: "no-cors",
-        body: formData
+        mode: "no-cors"
     }).catch(() => {});
-    
-    // ✅ FORCE SUCCESS UI (IMPORTANT)
+
     setTimeout(() => {
         document.getElementById("survey").style.display = "none";
         document.getElementById("success").classList.remove("hidden");
-    }, 800); // slight delay for better UX
-
+    }, 800);
 }
 
 </script>
