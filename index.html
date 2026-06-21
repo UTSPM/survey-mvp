@@ -160,7 +160,8 @@
     const rmName = urlParams.get('rmName');
     
     window.onload = function () {
-    
+
+        console.log("Submit button clicked");
         console.log("TOKEN:", token);
         console.log("RM NAME:", rmName);
     
@@ -175,7 +176,7 @@
     let rating = 0;
 
     // OPTIONAL: RM dynamic hook (future use)
-    document.getElementById("rmText").innerText = "";
+    // document.getElementById("rmText").innerText = "";
 
     const labels = {
         1: "Very Poor",
@@ -209,6 +210,7 @@ function submitSurvey() {
     btn.innerText = "Submitting...";
 
     const feedback = document.getElementById("feedback").value;
+    console.log("Sending request now...");
 
     // SEND DATA (do not depend on response)
     fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
