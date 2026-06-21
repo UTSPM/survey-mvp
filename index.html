@@ -213,20 +213,18 @@ function submitSurvey() {
     console.log("Sending request now...");
 
     // SEND DATA (do not depend on response)
+    const formData = new URLSearchParams();
+    formData.append("token", String(token || ""));
+    formData.append("score", String(rating));
+    formData.append("feedback", String(feedback || ""));
+    formData.append("rmName", String(rmName || ""));
+    
     fetch("https://default2a28b15bb6664096a92f98f699a881.7b.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/e67cf675e2bb4c5dbfae30be42c5c97a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=X491WKuxww87_pfxx7Kgq9t_FVqOpJmMqLuESW4pdA8", {
         method: "POST",
         mode: "no-cors",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            token: String(token || ""),
-            score: Number(rating),
-            feedback: String(feedback || ""),
-            rmName: String(rmName || "")
-        })
+        body: formData
     }).catch(() => {});
-
+    
     // ✅ FORCE SUCCESS UI (IMPORTANT)
     setTimeout(() => {
         document.getElementById("survey").style.display = "none";
